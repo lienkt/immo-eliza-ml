@@ -219,5 +219,5 @@ __marimo__/
 
 .Ds_Store
 
-# Not update models folder
-models/
+# ML models
+models/*.pkl
