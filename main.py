@@ -121,10 +121,17 @@ def main():
             print("\n💰 PRICE COMPARISON")
             print("=" * 60)
             print(f"Model        : {model_type}")
+            # print(f"Price actual : €{price_actual:,.2f}")
+            # print(f"Price pred   : €{price_pred:,.2f}")
+            # print(f"Error        : €{abs(price_actual - price_pred):,.2f}")
+            # Convert log price back to original scale for comparison
+            price_pred_orig = 10. ** price_pred
             print(f"Price actual : €{price_actual:,.2f}")
-            print(f"Price pred   : €{price_pred:,.2f}")
-            print(f"Error        : €{abs(price_actual - price_pred):,.2f}")
+            print(f"Price pred   : €{price_pred_orig:,.2f}")
+            print(f"Error        : €{abs(price_actual - price_pred_orig):,.2f}")
             print("=" * 60)
+
+
 
         # -----------------------------------
         # PREDICTION (BEST MODEL)

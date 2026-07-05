@@ -209,11 +209,11 @@ Highest Test R² Score wins:
 ```text
 #1 - XGBoost
 ----------------------------------------
-Test R2   : 0.7986
-Train R2  : 0.9143
-MAE       : 90050.98
-RMSE      : 174709.48
-Status    : OVERFITTING ⚠️
+Test R2   : 0.8292
+Train R2  : 0.8947
+MAE       : 0.09
+RMSE      : 0.12
+Status    : GOOD FIT ✅
 ```
 
 ---
@@ -221,13 +221,33 @@ Status    : OVERFITTING ⚠️
 # 📈 Example Output
 
 ```text
-Random Forest Results
----------------------
-Train R2 : 0.92
-Test R2  : 0.85
-MAE      : 35000
-RMSE     : 52000
-Status   : GOOD FIT
+============================================================
+🏆 MODEL PERFORMANCE LEADERBOARD
+============================================================
+
+#1 - XGBoost
+----------------------------------------
+Test R2   : 0.8292
+Train R2  : 0.8947
+MAE       : 0.09
+RMSE      : 0.12
+Status    : GOOD FIT ✅
+
+#2 - Random Forest
+----------------------------------------
+Test R2   : 0.8168
+Train R2  : 0.9721
+MAE       : 0.09
+RMSE      : 0.13
+Status    : OVERFITTING ⚠️
+
+#3 - Linear Regression
+----------------------------------------
+Test R2   : -1.2549
+Train R2  : 0.7362
+MAE       : 0.13
+RMSE      : 0.45
+Status    : OVERFITTING ⚠️
 ```
 
 ---

@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 def cleaning_data(df: pd.DataFrame) -> pd.DataFrame:
@@ -21,6 +22,9 @@ def cleaning_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # 3. Missing value flags (optional but useful)
     num_cols = df.select_dtypes(include=["int64", "float64"]).columns
+
+    # Fill missing values with NaN for numeric columns to create missing flags
+    df = df.fillna({col: np.nan for col in num_cols})
 
     for col in num_cols:
         df[col + "_missing"] = df[col].isna().astype(int)
