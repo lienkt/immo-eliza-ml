@@ -15,7 +15,7 @@ This project implements a full end-to-end ML pipeline:
 
 # 🎯 Project Goals
 
-- Predict house prices in Belgium
+- Predict house and apartment prices in Belgium
 - Build reusable ML pipelines (train + predict)
 - Compare multiple regression models
 - Evaluate performance using regression metrics
@@ -48,19 +48,34 @@ We compare 3 regression models:
 
 ```text
 linear_model.pkl
-├── StandardScaler
-├── OneHotEncoder
+├── Preprocessor
+│   ├── Numeric features
+│   │   ├── StandardScaler
+│   │   └── KNNImputer
+│   └── Categorical features
+│       ├── SimpleImputer (most_frequent)
+│       └── OneHotEncoder
 └── LinearRegression
 
 rf_model.pkl
-├── SimpleImputer
-├── OneHotEncoder
+├── Preprocessor
+│   ├── Numeric features
+│   │   ├── StandardScaler
+│   │   └── KNNImputer
+│   └── Categorical features
+│       ├── SimpleImputer (most_frequent)
+│       └── OneHotEncoder
 └── RandomForestRegressor
 
 xgb_model.pkl
-├── SimpleImputer
-├── OneHotEncoder
-└── XGBoostRegressor
+├── Preprocessor
+│   ├── Numeric features
+│   │   ├── StandardScaler
+│   │   └── KNNImputer
+│   └── Categorical features
+│       ├── SimpleImputer (most_frequent)
+│       └── OneHotEncoder
+└── XGBRegressor
 ```
 
 ---
@@ -69,65 +84,83 @@ xgb_model.pkl
 
 ```text
 Raw Dataset
-    ↓
+    │
+    ▼
+cleaning_data(df)
+    │
+    ▼
 preprocess(df)
-    ↓
-X / y split
-    ↓
-train_test_split
-    ↓
-ColumnTransformer
-    ↓
-Pipeline(preprocessor + model)
-    ↓
-model.fit()
-    ↓
+    ├── X (features)
+    └── y = log10(price)
+    │
+    ▼
+train_test_split()
+    │
+    ▼
+build_preprocessor()
+    ├── Numeric
+    │     ├── KNNImputer
+    │     └── StandardScaler
+    └── Categorical
+          ├── SimpleImputer
+          └── OneHotEncoder
+    │
+    ▼
+Pipeline
+(preprocessor + ML model)
+    │
+    ▼
+pipeline.fit()
+    │
+    ▼
+evaluate_model()
+    │
+    ▼
 joblib.dump()
-    ↓
-model.predict()
-```
-
----
-
-# 🔄 Training Process
-
-```text
-training_model()
-    ├── preprocess(df)
-    │     └── X, y
+(save trained pipeline)
     │
-    ├── train_test_split
+    ▼
+joblib.load()
     │
-    ├── train_single_model()
-    │     └── Pipeline(preprocessor + model)
+    ▼
+pipeline.predict()
     │
-    └── evaluate_model()
-          ├── R² Score
-          ├── MAE
-          ├── RMSE
-          └── Overfitting check
+    ▼
+10^prediction
+(convert log price back to €)
 ```
 
 ---
 
 # 🧪 Preprocessing Strategy
 
-## Linear Regression
+All models use the same preprocessing pipeline:
 
-- SimpleImputer
-- StandardScaler
-- OneHotEncoder
+## Numeric Features
 
-👉 Linear models are sensitive to feature scaling
+- StandardScaler  
+  → Standardize numerical features
 
----
+- KNNImputer  
+  → Handle missing numerical values using nearest-neighbor estimation
 
-## Tree-based models (Random Forest / XGBoost)
+## Categorical Features
 
-- SimpleImputer
-- OneHotEncoder
+- SimpleImputer(strategy="most_frequent")  
+  → Fill missing categorical values
 
-👉 Trees do NOT need scaling
+- OneHotEncoder(handle_unknown="ignore")  
+  → Convert categorical variables into numerical features
+
+## Model Compatibility
+
+The preprocessing pipeline is applied to:
+
+- Linear Regression
+- Random Forest Regressor
+- XGBoost Regressor
+
+The complete preprocessing and model are combined into a single sklearn Pipeline and saved as a `.pkl` file.
 
 ---
 
@@ -167,6 +200,7 @@ prediction = pipeline.predict(new_data)
 ```text
 immo-eliza-ml/
 │
+├── dev/
 ├── data/
 ├── models/
 │   ├── linear_model.pkl
@@ -174,10 +208,13 @@ immo-eliza-ml/
 │   └── xgb_model.pkl
 │
 ├── src/
+│   ├── __init__.py
+│   ├── cleaning.py
 │   ├── preprocess.py
-│   ├── train.py
+│   ├── training_model.py
 │   ├── evaluate_model.py
 │   ├── model_comparison.py
+│   ├── predict.py
 │
 ├── main.py
 ├── requirements.txt
@@ -188,17 +225,47 @@ immo-eliza-ml/
 
 # 🚀 How to Run
 
+## 1. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
+```
+
+## 2. Run the Application
+
+```bash
 python main.py
 ```
 
-Menu:
+## 3. Available Menu Options
 
-- Train models
-- Train all models
-- Compare models
-- Predict using selected model
+The application provides an interactive CLI menu:
+
+- **Train Linear Regression**
+  - Train a Linear Regression model and save the pipeline
+
+- **Train Random Forest**
+  - Train a Random Forest model and save the pipeline
+
+- **Train XGBoost**
+  - Train an XGBoost model and save the pipeline
+
+- **Train ALL Models**
+  - Train all models
+  - Evaluate performance
+  - Compare model results
+
+- **Predict**
+  - Select a trained model (`linear`, `rf`, `xgb`)
+  - Generate price prediction
+  - Compare predicted price with actual price
+
+- **Show Features**
+  - Display the number of features after preprocessing
+  - Preview generated feature names after encoding
+
+- **Exit**
+  - Close the application
 
 ---
 
@@ -249,6 +316,76 @@ MAE       : 0.13
 RMSE      : 0.45
 Status    : OVERFITTING ⚠️
 ```
+
+---
+
+# 📌 Features
+
+The model uses cleaned and engineered property features to predict house prices.
+
+## Property Information
+
+- `property_type`
+- `city`
+- `province`
+- `property_state`
+- `build_year`
+- `house_age`
+
+## Location Features
+
+- `latitude`
+- `longitude`
+- `nearest_city`
+- `nearest_city_distance_km`
+
+## Property Characteristics
+
+- `bedroom_count`
+- `livable_surface`
+- `total_surface`
+- `garage`
+- `terrace`
+- `swimming_pool`
+
+## Energy & Accessibility Features
+
+- `energy_consumption_kWh/m2/year`
+- `preschool_distance_m`
+- `train_station_distance_m`
+- `supermarket_distance_m`
+
+## Missing Value Indicators
+
+Additional binary features are created to indicate missing values:
+
+- `<feature_name>_missing`
+
+Example:
+
+- `build_year_missing`
+- `total_surface_missing`
+
+## Removed Features
+
+The following columns are removed before training:
+
+- `property_id` → identifier, not useful for prediction
+- `address` → high-cardinality text feature
+- `postcode` → removed to avoid location overfitting
+- `price_per_m2` → removed to prevent target leakage
+
+## Target Variable
+
+- `price`
+
+The target is transformed using:
+
+```text
+y = log10(price)
+```
+
+to reduce skewness in the price distribution.
 
 ---
 

@@ -13,7 +13,7 @@ def cleaning_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
 
     # 1. Drop useless / leakage columns
-    cols_to_drop = ["property_id", "address", "price_per_m2"]
+    cols_to_drop = ["property_id", "address", "price_per_m2", "postcode"]
     df = df.drop(columns=[col for col in cols_to_drop if col in df.columns])
 
     # 2. Feature engineering

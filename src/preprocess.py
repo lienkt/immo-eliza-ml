@@ -36,15 +36,7 @@ def build_preprocessor(X: pd.DataFrame, model_type: str) -> ColumnTransformer:
     cat_features = X.select_dtypes(include=["object", "category"]).columns
 
     # Numeric pipeline
-    if model_type == "linear":
-
-        numeric_transformer = Pipeline([
-            ("scaler", StandardScaler()),
-            # ("imputer", SimpleImputer(strategy="median")),
-            ("imputer", KNNImputer(n_neighbors=5, weights="distance"))
-        ])
-
-    elif model_type in ["rf", "xgb"]:
+    if model_type in ["linear", "rf", "xgb"]:
 
         numeric_transformer = Pipeline([
             ("scaler", StandardScaler()),
