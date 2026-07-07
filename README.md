@@ -349,11 +349,12 @@ Highest Test R² Score wins:
 ```text
 #1 - XGBoost
 ----------------------------------------
-Test R2   : 0.7941
-Train R2  : 0.7958
+Test R2   : 0.7947
+Train R2  : 0.7954
 MAE       : 0.1
 RMSE      : 0.14
 Status    : GOOD FIT ✅
+
 ```
 
 ---
@@ -367,31 +368,31 @@ Status    : GOOD FIT ✅
 
 #1 - XGBoost
 ----------------------------------------
-Test R2   : 0.7941
-Train R2  : 0.7958
+Test R2   : 0.7947
+Train R2  : 0.7954
 MAE       : 0.1
 RMSE      : 0.14
 Status    : GOOD FIT ✅
 
 #2 - Random Forest
 ----------------------------------------
-Test R2   : 0.7865
-Train R2  : 0.8704
+Test R2   : 0.7863
+Train R2  : 0.8676
 MAE       : 0.1
 RMSE      : 0.14
 Status    : GOOD FIT ✅
 
 #3 - Linear Regression
 ----------------------------------------
-Test R2   : -0.7335
-Train R2  : 0.7294
+Test R2   : -0.3777
+Train R2  : 0.7289
 MAE       : 0.13
-RMSE      : 0.4
+RMSE      : 0.35
 Status    : OVERFITTING ⚠️
 
 ============================================================
 🥇 BEST MODEL: XGBoost
-👉 Test R2: 0.7941
+👉 Test R2: 0.7947
 ============================================================
 ```
 
@@ -429,59 +430,31 @@ Convert to €
 
 ```
 
-Example:
+Example data:
 
 ```text
-import joblib
-import pandas as pd
-
-model = joblib.load(
-"models/xgb_model.pkl"
-)
-
-new_property = pd.DataFrame([{
-
-    "property_type": "HOUSE",
-    "subproperty_type": "DETACHED",
-    "province": "Brussels",
-    "locality": "Brussels",
-    "zip_code": 1000,
-
-    "bedrooms": 3,
-    "bathrooms": 2,
-
-    "living_area": 150,
-    "surface_of_the_plot": 350,
-
-    "garden": 1,
-    "garden_area": 100,
-
-    "terrace": 1,
-    "terrace_area": 20,
-
-    "facades": 4,
-
-    "build_year": 2015,
-
-    "state": "GOOD",
-
-    "equipped_kitchen": "INSTALLED",
-
-    "heating_type": "GAS",
-
-    "furnished": 0,
-
-    "swimming_pool": 0
-
-}])
-
-prediction = model.predict(new_property)
-
-price = 10 \*\* prediction[0]
-
-print(
-f"Estimated price: €{price:,.2f}"
-)
+{
+    "property_type":"apartment",
+    "city":"Mortsel",
+    "province":"antwerp",
+    "latitude":51.17245,
+    "longitude":4.446859,
+    "price":149000,
+    "property_state":"Normal",
+    "build_year":1969,
+    "bedroom_count":1,
+    "livable_surface":60,
+    "total_surface":2638,
+    "garage":0,
+    "terrace":0,
+    "energy_consumption_kWh\/m2\/year":505,
+    "swimming_pool":0,
+    "preschool_distance_m":796,
+    "train_station_distance_m":1000,
+    "supermarket_distance_m":181,
+    "nearest_city":"Antwerp",
+    "nearest_city_distance_km":6.07,
+}
 
 ```
 
