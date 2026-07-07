@@ -44,6 +44,76 @@ We compare 3 regression models:
 
 ---
 
+# 📌 Features
+
+The model uses cleaned and engineered property features to predict house prices.
+
+## Property Information
+
+- `property_type`
+- `city`
+- `province`
+- `property_state`
+- `build_year`
+- `house_age`
+
+## Location Features
+
+- `latitude`
+- `longitude`
+- `nearest_city`
+- `nearest_city_distance_km`
+
+## Property Characteristics
+
+- `bedroom_count`
+- `livable_surface`
+- `total_surface`
+- `garage`
+- `terrace`
+- `swimming_pool`
+
+## Energy & Accessibility Features
+
+- `energy_consumption_kWh/m2/year`
+- `preschool_distance_m`
+- `train_station_distance_m`
+- `supermarket_distance_m`
+
+## Missing Value Indicators
+
+Additional binary features are created to indicate missing values:
+
+- `<feature_name>_missing`
+
+Example:
+
+- `build_year_missing`
+- `total_surface_missing`
+
+## Removed Features
+
+The following columns are removed before training:
+
+- `property_id` → identifier, not useful for prediction
+- `address` → high-cardinality text feature
+- `postcode` → removed to avoid location overfitting
+- `price_per_m2` → removed to prevent target leakage
+
+## Target Variable
+
+- `price`
+
+The target is transformed using:
+
+```text
+y = log10(price)
+```
+
+to reduce skewness in the price distribution.
+
+---
+
 # 📦 Model Architecture (Saved Pipelines)
 
 ```text
@@ -108,6 +178,8 @@ build_preprocessor()
     ▼
 Pipeline
 (preprocessor + ML model)
+    ↓
+Hyperparameter Tuning
     │
     ▼
 pipeline.fit()
@@ -211,6 +283,7 @@ immo-eliza-ml/
 │   ├── __init__.py
 │   ├── cleaning.py
 │   ├── preprocess.py
+│   ├── hyperparameter_tuning.py
 │   ├── training_model.py
 │   ├── evaluate_model.py
 │   ├── model_comparison.py
@@ -317,75 +390,42 @@ RMSE      : 0.45
 Status    : OVERFITTING ⚠️
 ```
 
----
-
-# 📌 Features
-
-The model uses cleaned and engineered property features to predict house prices.
-
-## Property Information
-
-- `property_type`
-- `city`
-- `province`
-- `property_state`
-- `build_year`
-- `house_age`
-
-## Location Features
-
-- `latitude`
-- `longitude`
-- `nearest_city`
-- `nearest_city_distance_km`
-
-## Property Characteristics
-
-- `bedroom_count`
-- `livable_surface`
-- `total_surface`
-- `garage`
-- `terrace`
-- `swimming_pool`
-
-## Energy & Accessibility Features
-
-- `energy_consumption_kWh/m2/year`
-- `preschool_distance_m`
-- `train_station_distance_m`
-- `supermarket_distance_m`
-
-## Missing Value Indicators
-
-Additional binary features are created to indicate missing values:
-
-- `<feature_name>_missing`
-
-Example:
-
-- `build_year_missing`
-- `total_surface_missing`
-
-## Removed Features
-
-The following columns are removed before training:
-
-- `property_id` → identifier, not useful for prediction
-- `address` → high-cardinality text feature
-- `postcode` → removed to avoid location overfitting
-- `price_per_m2` → removed to prevent target leakage
-
-## Target Variable
-
-- `price`
-
-The target is transformed using:
+With Hyperperparammetter tuning:
 
 ```text
-y = log10(price)
-```
+============================================================
+🏆 MODEL PERFORMANCE LEADERBOARD
+============================================================
 
-to reduce skewness in the price distribution.
+#1 - XGBoost
+----------------------------------------
+Test R2   : 0.8014
+Train R2  : 0.8023
+MAE       : 0.1
+RMSE      : 0.13
+Status    : GOOD FIT ✅
+
+#2 - Random Forest
+----------------------------------------
+Test R2   : 0.7897
+Train R2  : 0.8791
+MAE       : 0.1
+RMSE      : 0.14
+Status    : GOOD FIT ✅
+
+#3 - Linear Regression
+----------------------------------------
+Test R2   : -1.2395
+Train R2  : 0.737
+MAE       : 0.13
+RMSE      : 0.45
+Status    : OVERFITTING ⚠️
+
+============================================================
+🥇 BEST MODEL: XGBoost
+👉 Test R2: 0.8014
+============================================================
+```
 
 ---
 

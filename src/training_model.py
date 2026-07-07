@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 from sklearn.pipeline import Pipeline
 
+from src.hyperparameter_tuning import tune_model
 from src.preprocess import preprocess, build_preprocessor
 from src.evaluate_model import evaluate_model
 from src.model_comparison import compare_models
@@ -129,7 +130,13 @@ def _train_model(
     # -------------------------------------------------
     # Train pipeline
     # -------------------------------------------------
-    pipeline.fit(X_train, y_train)
+    # pipeline.fit(X_train, y_train)
+    pipeline = tune_model(
+        pipeline,
+        model_type,
+        X_train,
+        y_train
+    )
 
     # -------------------------------------------------
     # Evaluate model performance
