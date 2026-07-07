@@ -79,29 +79,28 @@ The model uses cleaned and engineered property features to predict house prices.
 - `preschool_distance_m`
 - `train_station_distance_m`
 - `supermarket_distance_m`
-
-| Feature                          | Type             | Description                                           |
-| -------------------------------- | ---------------- | ----------------------------------------------------- |
-| `property_type`                  | Categorical      | Main type of property (house, apartment, etc.)        |
-| `city`                           | Categorical      | City where the property is located                    |
-| `province`                       | Categorical      | Province of the property                              |
-| `latitude`                       | Numerical        | Geographic latitude coordinate                        |
-| `longitude`                      | Numerical        | Geographic longitude coordinate                       |
-| `property_state`                 | Categorical      | Current condition/state of the property               |
-| `build_year`                     | Numerical        | Year when the property was built                      |
-| `house_age`                      | Numerical        | Calculated property age (`current_year - build_year`) |
-| `bedroom_count`                  | Numerical        | Number of bedrooms                                    |
-| `livable_surface`                | Numerical        | Living area of the property in m²                     |
-| `total_surface`                  | Numerical        | Total surface area in m²                              |
-| `garage`                         | Binary/Numerical | Whether the property has a garage                     |
-| `terrace`                        | Binary/Numerical | Whether the property has a terrace                    |
-| `swimming_pool`                  | Binary/Numerical | Whether the property has a swimming pool              |
-| `energy_consumption_kWh/m2/year` | Numerical        | Energy consumption indicator                          |
-| `preschool_distance_m`           | Numerical        | Distance to nearest preschool (meters)                |
-| `train_station_distance_m`       | Numerical        | Distance to nearest train station (meters)            |
-| `supermarket_distance_m`         | Numerical        | Distance to nearest supermarket (meters)              |
-| `nearest_city`                   | Categorical      | Closest city name                                     |
-| `nearest_city_distance_km`       | Numerical        | Distance to nearest city (kilometers)                 |
+  | Feature | Data Type | Description |
+  |---------|-----------|-------------|
+  | `property_type` | `str` | Main property type (e.g. apartment, house). |
+  | `city` | `str` | City where the property is located. |
+  | `province` | `str` | Belgian province of the property. |
+  | `latitude` | `float64` | Geographic latitude coordinate. |
+  | `longitude` | `float64` | Geographic longitude coordinate. |
+  | `property_state` | `str` | Current condition of the property. |
+  | `build_year` | `float64` | Year the property was built. |
+  | `house_age` | `float64` | Property age, calculated as `2026 - build_year`. |
+  | `bedroom_count` | `float64` | Number of bedrooms. |
+  | `livable_surface` | `float64` | Livable area in square meters (m²). |
+  | `total_surface` | `float64` | Total surface area in square meters (m²). |
+  | `garage` | `int64` | Garage availability (`0` = No, `1` = Yes). |
+  | `terrace` | `float64` | Terrace availability (`0` = No, `1` = Yes). |
+  | `energy_consumption` | `float64` | Energy consumption in kWh/m²/year. |
+  | `swimming_pool` | `int64` | Swimming pool availability (`0` = No, `1` = Yes). |
+  | `preschool_distance` | `float64` | Distance to the nearest preschool (meters). |
+  | `train_station_distance` | `float64` | Distance to the nearest train station (meters). |
+  | `supermarket_distance` | `float64` | Distance to the nearest supermarket (meters). |
+  | `nearest_city` | `str` | Name of the nearest city. |
+  | `nearest_city_distance` | `float64` | Distance to the nearest city (kilometers). |
 
 ## Removed Features
 
@@ -434,26 +433,26 @@ Example data:
 
 ```text
 {
-    "property_type":"apartment",
-    "city":"Mortsel",
-    "province":"antwerp",
-    "latitude":51.17245,
-    "longitude":4.446859,
-    "price":149000,
-    "property_state":"Normal",
-    "build_year":1969,
-    "bedroom_count":1,
-    "livable_surface":60,
-    "total_surface":2638,
-    "garage":0,
-    "terrace":0,
-    "energy_consumption_kWh\/m2\/year":505,
-    "swimming_pool":0,
-    "preschool_distance_m":796,
-    "train_station_distance_m":1000,
-    "supermarket_distance_m":181,
-    "nearest_city":"Antwerp",
-    "nearest_city_distance_km":6.07,
+  "property_type": "apartment",
+  "city": "Mortsel",
+  "province": "antwerp",
+  "latitude": 51.17245,
+  "longitude": 4.446859,
+  "price": 149000,
+  "property_state": "Normal",
+  "build_year": 1969,
+  "bedroom_count": 1,
+  "livable_surface": 60,
+  "total_surface": 100,
+  "garage": 0,
+  "terrace": 0,
+  "energy_consumption": 505,
+  "swimming_pool": 0,
+  "preschool_distance": 796,
+  "train_station_distance": 1000,
+  "supermarket_distance": 181,
+  "nearest_city": "Antwerp",
+  "nearest_city_distance": 6.07
 }
 
 ```

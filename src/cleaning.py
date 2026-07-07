@@ -36,6 +36,26 @@ def cleaning_data(df: pd.DataFrame) -> pd.DataFrame:
     if "swimming_pool" in df.columns:
         df["swimming_pool"] = df["swimming_pool"].fillna(0)
 
+    # Change name of energy_consumption_kWh/m2/year to energy_consumption
+    if "energy_consumption_kWh/m2/year" in df.columns:
+        df = df.rename(columns={"energy_consumption_kWh/m2/year": "energy_consumption"})    
+
+    # Change name of nearest_city_distance_km to nearest_city_distance
+    if "nearest_city_distance_km" in df.columns:
+        df = df.rename(columns={"nearest_city_distance_km": "nearest_city_distance"})
+
+    # Change name of preschool_distance_m to preschool_distance
+    if "preschool_distance_m" in df.columns:
+        df = df.rename(columns={"preschool_distance_m": "preschool_distance"})
+
+    # Change name of train_station_distance_m to train_station_distance
+    if "train_station_distance_m" in df.columns:
+        df = df.rename(columns={"train_station_distance_m": "train_station_distance"})
+
+    # Change name of supermarket_distance_m to supermarket_distance
+    if "supermarket_distance_m" in df.columns:
+        df = df.rename(columns={"supermarket_distance_m": "supermarket_distance"})
+
     # 2. Feature engineering
     # if "build_year" in df.columns:
     #     df["house_age"] = 2026 - df["build_year"]
