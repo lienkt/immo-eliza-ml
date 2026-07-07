@@ -80,29 +80,6 @@ The model uses cleaned and engineered property features to predict house prices.
 - `train_station_distance_m`
 - `supermarket_distance_m`
 
-| Feature                          | Type             | Description                                           |
-| -------------------------------- | ---------------- | ----------------------------------------------------- |
-| `property_type`                  | Categorical      | Main type of property (house, apartment, etc.)        |
-| `city`                           | Categorical      | City where the property is located                    |
-| `province`                       | Categorical      | Province of the property                              |
-| `latitude`                       | Numerical        | Geographic latitude coordinate                        |
-| `longitude`                      | Numerical        | Geographic longitude coordinate                       |
-| `property_state`                 | Categorical      | Current condition/state of the property               |
-| `build_year`                     | Numerical        | Year when the property was built                      |
-| `house_age`                      | Numerical        | Calculated property age (`current_year - build_year`) |
-| `bedroom_count`                  | Numerical        | Number of bedrooms                                    |
-| `livable_surface`                | Numerical        | Living area of the property in m²                     |
-| `total_surface`                  | Numerical        | Total surface area in m²                              |
-| `garage`                         | Binary/Numerical | Whether the property has a garage                     |
-| `terrace`                        | Binary/Numerical | Whether the property has a terrace                    |
-| `swimming_pool`                  | Binary/Numerical | Whether the property has a swimming pool              |
-| `energy_consumption_kWh/m2/year` | Numerical        | Energy consumption indicator                          |
-| `preschool_distance_m`           | Numerical        | Distance to nearest preschool (meters)                |
-| `train_station_distance_m`       | Numerical        | Distance to nearest train station (meters)            |
-| `supermarket_distance_m`         | Numerical        | Distance to nearest supermarket (meters)              |
-| `nearest_city`                   | Categorical      | Closest city name                                     |
-| `nearest_city_distance_km`       | Numerical        | Distance to nearest city (kilometers)                 |
-
 ## Removed Features
 
 The following columns are removed before training:
@@ -111,6 +88,17 @@ The following columns are removed before training:
 - `address` → high-cardinality text feature
 - `postcode` → removed to avoid location overfitting
 - `price_per_m2` → removed to prevent target leakage
+
+## Missing Value Indicators
+
+Additional binary features are created to indicate missing values:
+
+- `<feature_name>_missing`
+
+Example:
+
+- `build_year_missing`
+- `total_surface_missing`
 
 ## Target Variable
 
@@ -349,10 +337,10 @@ Highest Test R² Score wins:
 ```text
 #1 - XGBoost
 ----------------------------------------
-Test R2   : 0.7941
-Train R2  : 0.7958
-MAE       : 0.1
-RMSE      : 0.14
+Test R2   : 0.8292
+Train R2  : 0.8947
+MAE       : 0.09
+RMSE      : 0.12
 Status    : GOOD FIT ✅
 ```
 
@@ -394,104 +382,6 @@ Status    : OVERFITTING ⚠️
 👉 Test R2: 0.7941
 ============================================================
 ```
-
----
-
-🔮 Prediction Usage
-
-The saved model already contains preprocessing.
-
-Prediction flow:
-
-```text
-Raw Property Data
-|
-v
-Feature Engineering
-(create house_age)
-|
-v
-Saved sklearn Pipeline
-|
-|
-+-- Missing value handling
-+-- Scaling
-+-- Encoding
-|
-v
-Regression Model
-|
-v
-Predicted log(price)
-|
-v
-Convert to €
-
-```
-
-Example:
-
-```text
-import joblib
-import pandas as pd
-
-model = joblib.load(
-"models/xgb_model.pkl"
-)
-
-new_property = pd.DataFrame([{
-
-    "property_type": "HOUSE",
-    "subproperty_type": "DETACHED",
-    "province": "Brussels",
-    "locality": "Brussels",
-    "zip_code": 1000,
-
-    "bedrooms": 3,
-    "bathrooms": 2,
-
-    "living_area": 150,
-    "surface_of_the_plot": 350,
-
-    "garden": 1,
-    "garden_area": 100,
-
-    "terrace": 1,
-    "terrace_area": 20,
-
-    "facades": 4,
-
-    "build_year": 2015,
-
-    "state": "GOOD",
-
-    "equipped_kitchen": "INSTALLED",
-
-    "heating_type": "GAS",
-
-    "furnished": 0,
-
-    "swimming_pool": 0
-
-}])
-
-prediction = model.predict(new_property)
-
-price = 10 \*\* prediction[0]
-
-print(
-f"Estimated price: €{price:,.2f}"
-)
-
-```
-
-Advantages:
-
-✔ No manual preprocessing
-✔ Same pipeline during training and prediction
-✔ Ready for FastAPI deployment
-
----
 
 # 🚀 Future Improvements
 

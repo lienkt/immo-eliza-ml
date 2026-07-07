@@ -20,14 +20,14 @@ def cleaning_data(df: pd.DataFrame) -> pd.DataFrame:
     if "build_year" in df.columns:
         df["house_age"] = 2026 - df["build_year"]
 
-    # 3. Missing value flags (optional but useful)
-    num_cols = df.select_dtypes(include=["int64", "float64"]).columns
+    # # 3. Missing value flags (optional but useful)
+    # num_cols = df.select_dtypes(include=["int64", "float64"]).columns
 
-    # Fill missing values with NaN for numeric columns to create missing flags
-    df = df.fillna({col: np.nan for col in num_cols})
+    # # Fill missing values with NaN for numeric columns to create missing flags
+    # df = df.fillna({col: np.nan for col in num_cols})
 
-    for col in num_cols:
-        df[col + "_missing"] = df[col].isna().astype(int)
+    # for col in num_cols:
+    #     df[col + "_missing"] = df[col].isna().astype(int)
 
     # 4. Debug check
     print(f"Missing values remaining: {df.isnull().sum().sum()}")
