@@ -79,6 +79,7 @@ The model uses cleaned and engineered property features to predict house prices.
 - `preschool_distance_m`
 - `train_station_distance_m`
 - `supermarket_distance_m`
+
   | Feature | Data Type | Description |
   |---------|-----------|-------------|
   | `property_type` | `str` | Main property type (e.g. apartment, house). |
